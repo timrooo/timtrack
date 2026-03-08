@@ -10,6 +10,7 @@
     "dev": "concurrently \"vite\" \"npm run server\"",
     "server": "tsx watch server/index.ts",
     "build": "vite build && tsc -p server/tsconfig.json",
+    "start": "NODE_ENV=production node dist-server/index.js",
     "preview": "vite preview"
   },
   "dependencies": {

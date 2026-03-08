@@ -1,7 +1,11 @@
 import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
+import path from 'path'
+import { fileURLToPath } from 'url'
 import { getDb } from './db/index'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 import projectsRouter from './routes/projects'
 import constructionsRouter from './routes/constructions'
@@ -29,6 +33,15 @@ app.use('/api/ai/report', aiReportRouter)
 app.get('/api/health', (_req, res) => {
   res.json({ ok: true, ts: new Date().toISOString() })
 })
+
+// Serve frontend in production
+if (process.env.NODE_ENV === 'production') {
+  const distPath = path.join(__dirname, '../dist')
+  app.use(express.static(distPath))
+  app.get('*', (_req, res) => {
+    res.sendFile(path.join(distPath, 'index.html'))
+  })
+}
 
 app.listen(PORT, () => {
   console.log(`TimTrack server running on http://localhost:${PORT}`)
